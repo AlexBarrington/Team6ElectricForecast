@@ -46,19 +46,12 @@ Released   : 20130902
 	<div id="main">
 		<div id="banner"> 
 		<script type="text/javascript" charset="utf-8">
-webix.ui({
-  rows:[
-      { view:"template", 
-        type:"header", template:"My App!" },
-      { view:"datatable",
-        autoConfig:true,
-        editable:true,
-        data:{
-          title:"My Fair Lady", year:1964, votes:533848, rating:8.9, rank:5
-        }
-      }
-  ]
-});		
+ var chart = webix.ui({
+  view: "chart",
+  container:"mydiv",
+  $$("chart").load("actual.csv");
+});
+	
 	</script>
 	</div>
 		<div id="welcome">
