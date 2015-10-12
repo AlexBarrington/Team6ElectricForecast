@@ -22,4 +22,5 @@ urlpatterns = [
     #url(r'^admin/', include(admin.site.urls)),
     url(r'^$', views.HomeView.as_view(), name='home'),
     url(r'^admin/', include(admin.site.urls)),
+	url(r'^OpArea1/', views.OpArea1View),
 ]
