@@ -61,10 +61,6 @@ Released   : 20130902
  <canvas width="527" height="336" canvas_id="axis_x" style="width: 527px; height: 336px;"></canvas>
  <canvas width="527" height="336" canvas_id="1" style="z-index: 3; width: 527px; height: 336px;"></canvas>
  <canvas width="527" height="336" canvas_id="2" style="z-index: 4; width: 527px; height: 336px;"></canvas>
- <div class="webix_chart_legend" style="left: 427px; top: 132px; width: 90px; padding: 3px;">
- <div style="padding-left: 25px;" class="webix_chart_legend_item" series_id="0">Company A</div>
- <div style="padding-left: 25px;" class="webix_chart_legend_item" series_id="1">Company B</div>
- <div style="padding-left: 25px;" class="webix_chart_legend_item" series_id="2">Company C</div></div>
  <div class="webix_canvas_text webix_axis_title_y" style="left: -40.5px; top: 157px;">Electricity Usage</div>
  <div class="webix_canvas_text webix_axis_item_y" style="left: 0px; top: 291.5px; width: 45px;">0</div>
  <div class="webix_canvas_text webix_axis_item_y" style="left: 0px; top: 264.5px; width: 45px;">10</div>
@@ -153,17 +149,7 @@ webix.ready(function(){
       end:100,
       title:"Electricity Usage"
     },
-    legend:{
-      values:[
-        {text:"Company A",color:"#c1eada"},
-        {text:"Company B",color:"#fffaa5"},
-        {text:"Company C",color:"#ff8484", markerType: "item"}
-      ],
-      valign:"middle",
-      align:"right",
-      width:90,
-      layout:"y"
-    },
+    
     series:[
       {
         value:"#sales#",
