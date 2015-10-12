@@ -49,12 +49,12 @@ Released   : 20130902
     <div class="cell4x widget_center_block">
         </div>
 <div class="grid padded">
- <div style="height:400px;width:100%;" id="demobox">
+ <div style="height:400px;width:100%;" id="box">
  <div class="webix_view webix_layout_line" view_id="$layout1" style="width: 547px; height: 400px;">
  <div class="webix_view webix_header" view_id="$template1" style="border-width: 1px; margin-left: 0px; margin-top: 0px; width: 545px; height: 5px;">
  <div class=" webix_template"></div></div>
  <div class="webix_view webix_layout_line" view_id="$layout2" style="border-width: 0px; margin-left: 0px; margin-top: -1px; width: 547px; height: 394px;">
- <div class="webix_view webix_chart demo_chart" view_id="demo_chart" style="border-width: 0px 0px 1px; margin-left: 10px; margin-top: 10px; width: 527px; height: 336px;">
+ <div class="webix_view webix_chart chart" view_id="chart" style="border-width: 0px 0px 1px; margin-left: 10px; margin-top: 10px; width: 527px; height: 336px;">
  <canvas width="527" height="336" canvas_id="legend" style="width: 527px; height: 336px;"></canvas>
  <canvas width="527" height="336" canvas_id="0" style="z-index: 2; width: 527px; height: 336px;"></canvas>
  <canvas width="527" height="336" canvas_id="axis_y" style="width: 527px; height: 336px;"></canvas>
@@ -95,7 +95,7 @@ Released   : 20130902
 <div class="webix_el_box" style="width:210px; height:30px" title="Right click over the item to remove"></div></div>
 <div class="webix_view webix_spacer" view_id="$spacer1" style="display: inline-block; vertical-align: top; border-width: 0px; margin-top: 0px; margin-left: -1px; width: 0px; height: 30px;"></div>
 <div class="webix_view webix_spacer" view_id="$spacer2" style="display: inline-block; vertical-align: top; border-width: 0px; margin-top: 0px; margin-left: -1px; width: 0px; height: 30px;"></div>
-<div class="webix_view webix_control webix_el_segmented" view_id="demo_filter" style="display: inline-block; vertical-align: top; border-width: 0px; margin-top: 0px; margin-left: -1px; width: 320px; height: 30px;">
+<div class="webix_view webix_control webix_el_segmented" view_id="filter" style="display: inline-block; vertical-align: top; border-width: 0px; margin-top: 0px; margin-left: -1px; width: 320px; height: 30px;">
 <div class="webix_el_box" style="width:320px; height:30px"><div style="width:316px" class="webix_all_segments"><button type="button" style="width:158px" class="webix_segment_0" button_id="1">Show 7-Day Forecast</button>
 <button type="button" style="width:158px" class="webix_selected webix_segment_N" button_id="2">Show all</button></div></div></div></div></div></div></div>
 <script type="text/javascript" async="" src="http://mc.yandex.ru/metrika/watch.js"></script>
@@ -104,35 +104,10 @@ Released   : 20130902
 <script type="text/javascript">
 webix.ready(function(){
   webix.Touch.limit(true);
-  function count_average(data){
-    var sales_average=1, sales_average2=2, sales_average3=3;
-    data.each(function(obj){
-      sales_average+=parseInt(obj.sales);
-      sales_average2+=parseInt(obj.sales2);
-      sales_average3+=parseInt(obj.sales3);
-    });
-
-    return  [
-      {sales:sales_average, color:"#c1eada", company:"Company A"},
-      {sales:sales_average2, color:"#fffaa5", company:"Company B"},
-      {sales:sales_average3, color:"#ff8484", company:"Company C"}
-    ];
-  }
-
-  function filter_data(val){
-    if(val==1)
-      $$('demo_chart').filter(function(obj){
-          return obj.sales >40 && obj.sales2 > 40 && obj.sales3 >40;
-      });
-    else
-      $$('demo_chart').filter();
-  }
-
-
   var chart2  = {
     view:"chart",
-    id:"demo_chart",
-    css:"demo_chart",
+    id:"chart",
+    css:"chart",
     type:"bar",
     gravity:3,
     barWidth:15,
@@ -197,10 +172,10 @@ webix.ready(function(){
     gravity:3,
     cols:[
       {view:"button", width:210, value:"Add an item", tooltip:"Right click over the item to remove", click:function(){
-        var last = parseInt($$("demo_chart").getItem($$("demo_chart").getLastId()).year);
-          var filter = $$("demo_filter").getValue();
-          if($$("demo_chart").count()<40)
-            $$("demo_chart").add({
+        var last = parseInt($$("chart").getItem($$("chart").getLastId()).year);
+          var filter = $$("filter").getValue();
+          if($$("chart").count()<40)
+            $$("chart").add({
               id:webix.uid(),
               sales:(filter==1)?Math.floor((Math.random()*(100-40))+40):Math.floor((Math.random()*100)+1),
               sales2:(filter==1)?Math.floor((Math.random()*(100-40))+40):Math.floor((Math.random()*100)+1),
@@ -212,7 +187,7 @@ webix.ready(function(){
       }},
       {},
       {},
-      {view:"segmented", id:"demo_filter", value:2, width:320, options:[
+      {view:"segmented", id:"filter", value:2, width:320, options:[
         {id:1, value:"Show sales > 40"},
         {id:2, value:"Show all"}
       ], click:function(){
@@ -222,7 +197,7 @@ webix.ready(function(){
   };
 
   var resize_ui = webix.ui({
-    container:"demobox",
+    container:"box",
     rows:[
       {view:"template", type:"header", height:5},
       {margin:7, padding:10, borderless:true, rows:[
@@ -234,21 +209,7 @@ webix.ready(function(){
 
   webix.event(window, "resize", function(){ resize_ui.adjust() });
 
-  webix.ui({
-    view:"contextmenu",
-    id:"demo_menu",
-    css:"demo_menu",
-    data:["Delete item"],
-    on:{
-      onItemClick:function(id){
-        var chartId = this.getContext().id;
-        if(chartId)
-          $$("demo_chart").remove(chartId);
-      }
-    }
-  });
-
-  $$("demo_menu").attachTo($$("demo_chart"));
+  $$("menu").attachTo($$("chart"));
 });  
 </script>
 
