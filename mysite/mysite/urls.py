@@ -19,7 +19,8 @@ from django.contrib import admin
 from . import views
 
 urlpatterns = [
-    #url(r'^admin/', include(admin.site.urls)),
-    url(r'^$', views.HomeView.as_view(), name='home'),
+  
+    url(r'^$', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
+	url(r'^OpArea/', views.OpAreaView),
 ]
