@@ -1,13 +1,8 @@
 from django.test import TestCase
 
-from .models import Entry
 
 # Create your tests here.
-class ProjectTests(TestCase):
 
-    def test_homepage(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 200)
 
 from django.contrib.auth import get_user_model
 
@@ -24,8 +19,9 @@ class HomePageTests(TestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_dashboard_page(self):
-        response = self.client.get('/')
+        response = self.client.get('')
         self.assertEqual(response.status_code, 200)
 
     def test_opArea_page(self):
         response = self.client.get('/OpArea/')
+        self.assertEqual(response.status_code, 200)
