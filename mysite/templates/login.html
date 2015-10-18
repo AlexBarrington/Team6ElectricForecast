@@ -1,0 +1,29 @@
+from django.contrib.auth.views import login
+
+<!DOCTYPE html>
+<html >
+  <head>
+    <meta charset="UTF-8">
+      {% load staticfiles %}
+    <link rel="stylesheet" href="{% static 'css/login.css' %}">
+    <title>Random Login Form</title>
+
+        <script src="js/prefixfree.min.js"></script>
+  </head>
+
+  <body>
+    <div class="body"></div>
+		<div class="grad"></div>
+		<div class="header">
+			<div>Electric<span>Forecast</span></div>
+		</div>
+		<br>
+		<div class="login">
+				<input type="text" placeholder="username" name="user"><br>
+				<input type="password" placeholder="password" name="password"><br>
+				<input type="button" value="Login">
+                <a href=""></a>
+		</div>
+    <script type="text/javascript" src="{{ STATIC_URL }}js/prefixfree.min.js"></script>
+  </body>
+</html>

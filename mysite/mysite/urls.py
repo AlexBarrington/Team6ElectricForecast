@@ -21,6 +21,8 @@ from . import views
 urlpatterns = [
   
     url(r'^$', views.HomeView),
+    url(r'^Home/', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^OpArea/', views.OpAreaView),
+    url(r'^Login/', views.Login),
 ]
