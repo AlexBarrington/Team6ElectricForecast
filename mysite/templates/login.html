@@ -1,29 +1,48 @@
 from django.contrib.auth.views import login
 
 <!DOCTYPE html>
-<html >
-  <head>
+<html>
+<head>
     <meta charset="UTF-8">
-      {% load staticfiles %}
+    {% load staticfiles %}
     <link rel="stylesheet" href="{% static 'css/login.css' %}">
-    <title>Random Login Form</title>
+    <script type="text/javascript" src="static/js/prefixfree.min.js"></script>
+    <title>Electric Forecast Login</title>
 
-        <script src="js/prefixfree.min.js"></script>
-  </head>
+</head>
 
-  <body>
-    <div class="body"></div>
-		<div class="grad"></div>
-		<div class="header">
-			<div>Electric<span>Forecast</span></div>
-		</div>
-		<br>
-		<div class="login">
-				<input type="text" placeholder="username" name="user"><br>
-				<input type="password" placeholder="password" name="password"><br>
-				<input type="button" value="Login">
-                <a href=""></a>
-		</div>
-    <script type="text/javascript" src="{{ STATIC_URL }}js/prefixfree.min.js"></script>
-  </body>
+<body>
+<div class="body"></div>
+<div class="grad"></div>
+<div class="header">
+    <div>Electric<span>Forecast</span></div>
+</div>
+<br>
+
+<div id="login" class="login">
+    <form class="form-horizontal" name="LoginForm" action="/Dashboard/" method="post">
+        {% csrf_token %}
+        {% if next %}
+        <input type="hidden" name="next" value="{{next}}"/>
+        {% endif %}
+        <div class="control-group">
+            <label class="control-label" for="username">Username</label>
+            <div class="controls">
+                <input type="text" id="username" name="username"  placeholder="Username">
+            </div>
+        </div>
+        <div class="control-group">
+            <label class="control-label" for="password">Password</label>
+            <div class="controls">
+                <input type="password" name="password" id="password" placeholder="Password">
+            </div>
+        </div>
+        <div class="control-group">
+            <div class="controls">
+                <button type="submit" class="btn">Login</button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
 </html>
