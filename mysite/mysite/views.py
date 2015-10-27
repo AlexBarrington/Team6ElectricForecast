@@ -7,11 +7,13 @@ from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext, loader
 from django.shortcuts import redirect
 from os import listdir
-from os.path import isfile, join
+from os.path import isfile, join, abspath
+import os
 
 # from django.db.models import Entry
 
-myPath = "C:\\Users\\britt.ahlgrim\\Desktop\\Junior\\Semester 1\\software methodologies\\Project\\data"
+dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+myPath = dir + '\\data'
 opAreaFiles = [f for f in listdir(myPath) if isfile(join(myPath, f))]
 opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
 
