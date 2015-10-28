@@ -15,13 +15,13 @@ class HomePageTests(TestCase):
         self.user = get_user_model().objects.create(username='some_user')
 
     def test_login_page(self):
-        #response = self.client.get('/admin')
         response = self.client.get('/admin/login/?next=/admin/')
         self.assertEqual(response.status_code, 200)
 
     def test_dashboard_page(self):
-        response = self.client.get('/')
-        self.assertEqual(response.status_code, 302)
+        response = self.client.get('/Home/')
+        self.assertEqual(response.status_code, 200)
+
 
     def test_opArea_page(self):
         response = self.client.get('/OpArea/')

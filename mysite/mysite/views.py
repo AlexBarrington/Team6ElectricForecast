@@ -1,24 +1,42 @@
-from django.shortcuts import render
-
+from django.shortcuts import render, render_to_response
 # Create your views here.
 from django.views.generic.base import TemplateView
-from django.views.generic.list import ListView
 from django.http import HttpResponse
+from django.template.context_processors import csrf
+from django.views.decorators.csrf import csrf_exempt
 from django.template import RequestContext, loader
-from django.conf import settings
 from django.shortcuts import redirect
+from os import listdir
+from os.path import isfile, join, abspath
+import os
+
 # from django.db.models import Entry
 
+dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+myPath = dir + '\\data'
+opAreaFiles = [f for f in listdir(myPath) if isfile(join(myPath, f))]
+opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
 
-def HomeView(TemplateView):
-	if not TemplateView.user.is_authenticated():
-		return redirect('http://127.0.0.1:8000/admin/logout')
-	else:
-		template = loader.get_template('index.html')
-		return HttpResponse(template.render())
+def Login(TemplateView):
+    c = {}
+    c.update(TemplateView)
+    template = loader.get_template('login.html')
+    return HttpResponse(template.render())
 
-def OpAreaView(TemplateView):
-	template = loader.get_template('opAreaIndex.html')
-	context = RequestContext(TemplateView, {'pageTitle': 'OP AREA NAME'} )
-	return HttpResponse(template.render(context))
-	
+@csrf_exempt
+def HomeView(request):
+    if not request.user.is_authenticated():
+        return redirect('http://127.0.0.1:8000/admin/logout')
+    else:
+       c = {'opAreas':opAreaNames}
+       #c.update(csrf(request))
+       return render_to_response('index.html', c)
+
+@csrf_exempt
+def OpAreaView(request):
+    if not request.user.is_authenticated():
+        return redirect('http://127.0.0.1:8000/admin/logout')
+    else:
+        c = {'pageTitle': 'OP AREA NAME', 'opAreas': opAreaNames}
+        #c.update(csrf(request))
+        return render_to_response('opAreaIndex.html', c)

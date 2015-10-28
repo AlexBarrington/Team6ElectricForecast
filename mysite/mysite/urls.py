@@ -20,7 +20,10 @@ from . import views
 
 urlpatterns = [
   
-    url(r'^$', views.HomeView),
+    url(r'^$', views.Login),
+    url(r'^Login/', views.Login),
+    url(r'^Dashboard',views.HomeView),
+    url(r'^Home/', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
 	url(r'^OpArea/', views.OpAreaView),
 ]
