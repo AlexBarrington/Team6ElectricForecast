@@ -48,7 +48,7 @@ def HomeView(request):
 
 
 @login_required
-def OpAreaView(request, op_area_name=''):
+def OpAreaView(request, op_area_name=None):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/admin/logout')
     else:
@@ -57,6 +57,21 @@ def OpAreaView(request, op_area_name=''):
         dataFolder = dir + dataFolder
         opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
         opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
-        c = {'pageTitle': opAreaName, 'opAreas': opAreaNames}
+        c = {'pageTitle': "OPAREA NAME", 'opAreas': opAreaNames}
         # c.update(csrf(request))
         return render_to_response('opAreaIndex.html', c)
+
+
+def opArea(request, op_area_name=None):
+    if not request.user.is_authenticated():
+        return redirect('http://127.0.0.1:8000/admin/logout')
+    else:
+        data_folder = MyUser.objects.get(data_folder=request.user.data_folder)
+        dataFolder = str(data_folder)
+        dataFolder = dir + dataFolder
+        opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
+        opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
+    return render_to_response('opAreaIndex.html',
+                              {'opArea': op_area_name,
+                               'opAreas':opAreaNames},
+                              context_instance=RequestContext(request))

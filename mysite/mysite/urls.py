@@ -23,6 +23,6 @@ urlpatterns = [
     url(r'^Dashboard', views.HomeView),
     url(r'^Home/', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
-    url(r'^OpArea/(?P<vendor_id>\d+)/$', views.OpAreaView),
-    url(r'^OpArea/(?P<op_area_name>\d+)/$', views.OpAreaView, name='OpAreaName'),
+    url(r'^OpArea/', views.OpAreaView, name='opArea'),
+    url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.opArea, name='op_area_detail'),
 ]
