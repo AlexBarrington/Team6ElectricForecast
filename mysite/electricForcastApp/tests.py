@@ -12,7 +12,10 @@ class HomePageTests(TestCase):
     """Test whether our blog entries show up on the homepage"""
 
     def setUp(self):
-        self.user = get_user_model().objects.create(username='some_user')
+        self.user = get_user_model().objects.create(username='britt.ahlgrim@gmail.com')
+        # self.password = get_user_model().objects.create(password='password')
+
+
 
     def test_login_page(self):
         response = self.client.get('/admin/login/?next=/admin/')
@@ -26,5 +29,6 @@ class HomePageTests(TestCase):
     def test_opArea_page(self):
         response = self.client.get('/OpArea/')
         self.assertEqual(response.status_code, 200)
+
 
 
