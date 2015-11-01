@@ -5,14 +5,17 @@ from django.contrib.auth.models import (
 
 
 class MyUserManager(BaseUserManager):
-    def create_user(self, email, data_folder, password=None):
+    def create_user(self, username, email, data_folder, password=None):
         """
         Creates and saves a User with the given email, data folder and password.
         """
+        if not username:
+            raise ValueError('Users must have a username')
         if not email:
             raise ValueError('Users must have an email address')
 
         user = self.model(
+            username = username,
             email=self.normalize_email(email),
             data_folder=data_folder,
         )
@@ -21,11 +24,12 @@ class MyUserManager(BaseUserManager):
         user.save(using=self._db)
         return user
 
-    def create_superuser(self, email, data_folder, password):
+    def create_superuser(self, username, email, data_folder, password):
         """
-        Creates and saves a superuser with the given email, data folder and password.
+        Creates and saves a superuser with the given username, email, data folder and password.
         """
-        user = self.create_user(email,
+        user = self.create_user(username,
+            email,
             password=password,
             data_folder=data_folder
         )
@@ -35,6 +39,7 @@ class MyUserManager(BaseUserManager):
 
 
 class MyUser(AbstractBaseUser):
+    username = models.TextField()
     email = models.EmailField(
         verbose_name='email address',
         max_length=255,
@@ -50,15 +55,15 @@ class MyUser(AbstractBaseUser):
     REQUIRED_FIELDS = ['data_folder']
 
     def get_full_name(self):
-        # The user is identified by their email address
-        return self.email
+        # The user is identified by their username
+        return self.username
 
     def get_short_name(self):
-        # The user is identified by their email address
-        return self.email
+        # The user is identified by their username
+        return self.username
 
     def __str__(self):              # __unicode__ on Python 2
-        return self.email
+        return self.data_folder
 
     def has_perm(self, perm, obj=None):
         "Does the user have a specific permission?"

@@ -19,10 +19,8 @@ Released   : 20130902
     {% block statics %}
     <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet"/>
     {% load staticfiles %}
-    <link href="{% static " css
-    /default.css" %}" rel="stylesheet" type="text/css" media="all" />
-    <link href="{% static " css
-    /fonts.css" %}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{% static ' css/default.css' %}" rel="stylesheet" type="text/css" media="all" />
+    <link href="{% static ' css/fonts.css' %}" rel="stylesheet" type="text/css" media="all" />
     <link rel="stylesheet" href="http://cdn.webix.com/edge/webix.css" type="text/css">
     <script src="http://cdn.webix.com/edge/webix.js" type="text/javascript"></script>
     <!--[if IE 6]>
@@ -31,10 +29,13 @@ Released   : 20130902
 
 </head>
 <body>
+{% load staticfiles %}
+<script type="text/javascript" src="{% static 'js/layoutController.js' %}"></script>
 <div id="page" class="container">
     <div id="header">
         <div id="logo">
-            <img src="{% static 'images/spark.jpg' %}" alt="" />
+            <img src="{% static 'images/spark.jpg' %}" alt=""/>
+
             <h1><a href="#">Electric Forecasts</a></h1>
             <span>Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a></span>
         </div>
@@ -43,6 +44,7 @@ Released   : 20130902
                 <li><a href="http://127.0.0.1:8000/Dashboard " accesskey="1" title="">Dashboard</a>
                 </li>
                 {% for opArea in opAreas %}
+                <button onclick="openOpAreaPage('{{ opArea }}')">{{ opArea }}</button>
                 <li><a href="http://127.0.0.1:8000/OpArea" accesskey="2" title="" {% csrf_token %}>{{ opArea }}</a></li>
                 {% endfor %}
                 <li><a href="http://127.0.0.1:8000/admin/logout" accesskey="5" title="">Log Out</a></li>
