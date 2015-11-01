@@ -7,30 +7,12 @@
 
   var app = angular.module('electricForcastApp.controllers', []);
 
-  app.controller('LayoutController', ['$scope', '$http', 'CalculatorService', function($scope, $http, CalculatorService){
+  app.controller('LayoutController', ['$scope', '$http', 'CalculatorService', function($scope, $http){
 
    console.log('in LayoutController...');
-    $scope.openOpAreaPage = function() {
-     window.location.href="{% url OpAreaView opAreaName %}";
+    $scope.openOpAreaPage = function(opAreaName) {
+     window.location.href="{% url OpArea opAreaName %}";
    };
 
   }]);
-
-  /**
-  * @namespace RegisterController
-  */
-  function RegisterController($location, $scope, Authentication) {
-    var vm = this;
-
-    vm.openOpAreaPage = openOpAreaPage;
-
-    /**
-    * @name openOpAreaPage
-    * @desc Opens an OpArea page based on the click
-    */
-    function openOpAreaPage(opAreaName) {
-      /*insert method body here*/
-      window.location.href="{% url OpAreaView opAreaName %}";
-    }
-  }
 })();
