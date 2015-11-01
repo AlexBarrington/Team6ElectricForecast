@@ -15,12 +15,14 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-
 from . import views
 
 urlpatterns = [
-  
-    url(r'^$', views.HomeView),
+    url(r'^$', views.login_user),
+    url(r'^login/', views.login_user),
+    url(r'^Dashboard', views.HomeView),
+    url(r'^Home/', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^OpArea/', views.OpAreaView),
+    url(r'^OpArea/(?P<vendor_id>\d+)/$', views.OpAreaView),
+    url(r'^OpArea/(?P<op_area_name>\d+)/$', views.OpAreaView, name='OpAreaName'),
 ]
