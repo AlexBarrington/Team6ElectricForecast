@@ -45,7 +45,7 @@ Released   : 20130902
                 </li>
                 {% for opArea in opAreas %}
                 <button onclick="openOpAreaPage('{{ opArea }}')">{{ opArea }}</button>
-                <li><a href="http://127.0.0.1:8000/OpArea" accesskey="2" title="" {% csrf_token %}>{{ opArea }}</a></li>
+                <li><a href="http://127.0.0.1:8000/OpArea opArea" accesskey="2" title="" {% csrf_token %}>{{ opArea }}</a></li>
                 {% endfor %}
                 <li><a href="http://127.0.0.1:8000/admin/logout" accesskey="5" title="">Log Out</a></li>
             </ul>

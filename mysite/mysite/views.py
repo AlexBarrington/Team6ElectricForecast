@@ -48,7 +48,7 @@ def HomeView(request):
 
 
 @login_required
-def OpAreaView(request, opAreaName):
+def OpAreaView(request, op_area_name=''):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/admin/logout')
     else:
