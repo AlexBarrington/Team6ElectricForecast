@@ -25,4 +25,5 @@ urlpatterns = [
     url(r'^admin/', include(admin.site.urls)),
     url(r'^OpArea/', views.OpAreaView, name='opArea'),
     url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.opArea, name='op_area_detail'),
+	url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
 ]

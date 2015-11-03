@@ -11,6 +11,7 @@ from django.contrib.auth import authenticate, login, logout
 from os import listdir
 from os.path import isfile, join, abspath
 import os
+import csv
 
 # from django.db.models import Entry
 
@@ -75,3 +76,20 @@ def opArea(request, op_area_name=None):
                               {'opArea': op_area_name,
                                'opAreas':opAreaNames},
                               context_instance=RequestContext(request))
+
+
+							  
+def dataView(request, op_area_name=None):
+	if not request.user.is_authenticated():
+		return redirect('http://127.0.0.1:8000/admin/logout')
+	else:
+		data_folder = MyUser.objects.get(data_folder=request.user.data_folder)
+		dataFolder = str(data_folder)
+		dataFolder = dir + dataFolder
+		opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
+		opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
+		opAreaName = [n for n in opAreaNames if n==op_area_name]
+		opAreaDataPath = dataFolder + '\\' + op_area_name + '.csv'
+		file = open(opAreaDataPath, 'r')
+		contents = file.read()
+	return render_to_response('data.html', {'data': contents})

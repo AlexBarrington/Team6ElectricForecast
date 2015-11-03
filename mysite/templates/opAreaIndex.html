@@ -15,37 +15,81 @@ Released   : 20130902
 {% load staticfiles %}
 <link href="{% static "css/default.css" %}" rel="stylesheet" type="text/css" media="all" />
 <link href="{% static "css/fonts.css" %}" rel="stylesheet" type="text/css" media="all" />
+
 <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 {% endblock %}
 		{% block content %}
 <body>
-  <canvas id="c" width="500" height="500"></canvas>
+   <script src="/static/js/papaparse.js"></script>
+
+<!--   <div>
+	<input type = "file" id="fileInput">
+` </div> -->
+  <canvas id="c" width="750" height="500"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script>
-    var ctx = document.getElementById("c").getContext("2d");
-    var data = {
-      labels: ["January", "February", "March", "April", "May", "June", "July"],
-      datasets: [{
-        label: "My First dataset",
-        fillColor: "rgba(220,220,220,0.2)",
-        strokeColor: "rgba(220,220,220,1)",
-        pointColor: "rgba(220,220,220,1)",
-        pointStrokeColor: "#fff",
-        pointHighlightFill: "#fff",
-        pointHighlightStroke: "rgba(220,220,220,1)",
-        data: [65, 59, 80, 81, 56, 55, 40]
-      }, {
-        label: "My Second dataset",
-        fillColor: "rgba(151,187,205,0.2)",
-        strokeColor: "rgba(151,187,205,1)",
-        pointColor: "rgba(151,187,205,1)",
-        pointStrokeColor: "#fff",
-        pointHighlightFill: "#fff",
-        pointHighlightStroke: "rgba(151,187,205,1)",
-        data: [28, 48, 40, 19, 86, 27, 90]
-      }]
-    };
-    var MyNewChart = new Chart(ctx).Line(data);
+	  
+	var opArea = "{{ opArea }}"
+	var url = "http://127.0.0.1:8000/data/" + opArea + "/"
+	
+	function doStuff(data){
+		console.log("made it to the callback")
+		
+		var actualLoadDataSet = []
+		var forecastLoadDataSet = []
+		var labels = []
+		//the first and last five seem to be garbage
+		for(i = 5; i < data.length-5; i++){
+			actualLoadDataSet.push(data[i][2]);
+			forecastLoadDataSet.push(data[i][6]);
+			if(i%20==0){
+				labels[i] = data[i][0];
+			} else{
+				labels[i] = "";
+			}
+		}
+			
+		
+		var ctx = document.getElementById("c").getContext("2d");
+		var dataSets = {
+			labels: labels,
+			datasets: [{
+			label: "Electric Load",
+			fillColor: "rgba(220,220,220,0.2)",
+			strokeColor: "rgba(220,220,220,1)",
+			pointColor: "rgba(220,220,220,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(220,220,220,1)",
+			data: actualLoadDataSet
+			}, {
+			label: "Temperature",
+			fillColor: "rgba(151,187,205,0.2)",
+			strokeColor: "rgba(151,187,205,1)",
+			pointColor: "rgba(151,187,205,1)",
+			pointStrokeColor: "#fff",
+			pointHighlightFill: "#fff",
+			pointHighlightStroke: "rgba(151,187,205,1)",
+			data: forecastLoadDataSet
+			}]
+		};
+		var MyNewChart = new Chart(ctx).Line(dataSets);
+	}
+	
+	function parseData(url, callback){
+		console.log("made it to js")
+		Papa.parse(url, {
+			download: true,
+			dynamicTyping: true,
+			complete: function(results){
+				callback(results.data);
+			}
+		});
+	}
+	
+	parseData(url, doStuff)
+	
+
   </script>
 </body>
 		<div id="welcome">
@@ -53,15 +97,15 @@ Released   : 20130902
 				<h2>{{ pageTitle }}</h2>
 				<span class="byline">{{ opArea }}</span>
 			</div>
-			<p>This is <strong>Privy</strong>, a free, fully standards-compliant CSS template designed by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>. The photos in this template are from <a href="http://fotogrph.com/"> Fotogrph</a>. This free template is released under the <a href="http://templated.co/license">Creative Commons Attribution</a> license, so you're pretty much free to do whatever you want with it (even use it commercially) provided you give us credit for it. Have fun :) </p>
+			<p>This is <strong>{{ opArea }}</strong>, showing the contrast between forecasted and actual electrical load</p>
 			<ul class="actions">
-				<li><a href="#" class="button">Etiam posuere</a></li>
+				<li><a href="#" class="button"></a></li>
 			</ul>
 		</div>
 		<div id="featured">
 			<div class="title">
-				<h2>Maecenas lectus sapien</h2>
-				<span class="byline">Integer sit amet aliquet pretium</span>
+				<h2>Statistics</h2>
+				<span class="byline">A quick look at how {{ opArea }} is doing</span>
 			</div>
 			<ul class="style1">
 				<li class="first">
