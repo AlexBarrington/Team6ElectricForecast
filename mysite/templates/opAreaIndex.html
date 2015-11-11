@@ -73,7 +73,11 @@ Released   : 20130902
 			data: forecastLoadDataSet
 			}]
 		};
-		var MyNewChart = new Chart(ctx).Line(dataSets);
+		var MyNewChart = new Chart(ctx).Line(dataSets,{
+		scaleOverride : true,
+        scaleSteps : 3,
+        scaleStepWidth : 50,
+        scaleStartValue : 0 });
 	}
 	
 	function parseData(url, callback){
