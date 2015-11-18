@@ -34,7 +34,7 @@ def login_user(request):
     return render_to_response('login.html', context_instance=RequestContext(request))
 
 
-@login_required
+@login_required(login_url='/login/')
 def HomeView(request):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/logout')
@@ -48,7 +48,7 @@ def HomeView(request):
         return render_to_response('index.html', c)
 
 
-@login_required
+@login_required(login_url='/login/')
 def OpAreaView(request, op_area_name=None):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/admin/logout')
