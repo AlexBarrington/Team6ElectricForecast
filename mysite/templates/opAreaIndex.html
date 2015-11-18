@@ -21,11 +21,12 @@ Released   : 20130902
 		{% block content %}
 <body>
    <script src="/static/js/papaparse.js"></script>
+   <script src="/static/js/jquery-1.11.3.js"></script>
+   <script src="/static/js/dygraph.js"></script>
 
 <!--   <div>
 	<input type = "file" id="fileInput">
 ` </div> -->
-  <canvas id="c" width="750" height="500"></canvas>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script>
 	  
@@ -35,47 +36,57 @@ Released   : 20130902
 	function doStuff(data){
 		console.log("made it to the callback")
 		
-		var actualLoadDataSet = []
-		var forecastLoadDataSet = []
-		var labels = []
-		//the first and last five seem to be garbage
-		for(i = 5; i < data.length-5; i++){
-			actualLoadDataSet.push(data[i][2]);
-			forecastLoadDataSet.push(data[i][6]);
-			if(i%20==0){
-				labels[i] = data[i][0];
-			} else{
-				labels[i] = "";
-			}
-		}
+		var data = 
 			
 		
-		var ctx = document.getElementById("c").getContext("2d");
-		var dataSets = {
-			labels: labels,
-			datasets: [{
-			label: "Electric Load",
-			fillColor: "rgba(220,220,220,0.2)",
-			strokeColor: "rgba(220,220,220,1)",
-			pointColor: "rgba(220,220,220,1)",
-			pointStrokeColor: "#fff",
-			pointHighlightFill: "#fff",
-			pointHighlightStroke: "rgba(220,220,220,1)",
-			data: actualLoadDataSet
-			}, {
-			label: "Temperature",
-			fillColor: "rgba(151,187,205,0.2)",
-			strokeColor: "rgba(151,187,205,1)",
-			pointColor: "rgba(151,187,205,1)",
-			pointStrokeColor: "#fff",
-			pointHighlightFill: "#fff",
-			pointHighlightStroke: "rgba(151,187,205,1)",
-			data: forecastLoadDataSet
-			}]
-		};
-		var MyNewChart = new Chart(ctx).Line(dataSets);
-	}
+		 $(document).ready(function () {
+      new Dygraph(
+          document.getElementById("load"),
+          data,
+          {
+            customBars: true,
+            title: 'Load for {{ opArea }}',
+            ylabel: 'Load (MW)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' },
+            showRangeSelector: true
+          }
+      );
+      new Dygraph(
+          document.getElementById("temp"),
+          data,
+          {
+            
+            customBars: true,
+            title: 'Temperatures for {{ opArea }}',
+            ylabel: 'Temperature (F)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' },
+            showRangeSelector: true,
+            rangeSelectorHeight: 30,
+            rangeSelectorPlotStrokeColor: 'green',
+            rangeSelectorPlotFillColor: 'lightgreen'
+          });
+		  
+		  new Dygraph(
+          document.getElementById("windSpeed"),
+          data,
+          {
+            
+            customBars: true,
+            title: 'Wind Speed for {{opArea}}',
+            ylabel: 'Wind Speed (mph)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'right' },
+            showRangeSelector: true,
+            rangeSelectorHeight: 30,
+            rangeSelectorPlotStrokeColor: 'yellow',
+            rangeSelectorPlotFillColor: 'lightyellow'
+          });
+    }
+);
 	
+	}
 	function parseData(url, callback){
 		console.log("made it to js")
 		Papa.parse(url, {
@@ -88,12 +99,16 @@ Released   : 20130902
 	}
 	
 	parseData(url, doStuff)
-	
-
   </script>
 </body>
+<div id="load" style="width:600px; height:300px;"></div>
+<p><br><br><br></p>
+<div id="temp" style="width:600px; height:300px;"></div>
+<p><br><br><br></p>
+<div id="windSpeed" style="width:600px; height:300px;"></div>
 		<div id="welcome">
 			<div class="title">
+				<p><br><br><br><br></p>
 				<h2>{{ pageTitle }}</h2>
 				<span class="byline">{{ opArea }}</span>
 			</div>
