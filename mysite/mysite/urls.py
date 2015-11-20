@@ -20,12 +20,11 @@ from . import views
 urlpatterns = [
     url(r'^$', views.login_user),
     url(r'^login/', views.login_user, name='login'),
-    url(r'^Dashboard', views.HomeView, name='dashboard'),
-    url(r'^Home/', views.HomeView),
+    url(r'^Dashboard', views.home_view, name='dashboard'),
+    url(r'^Home/', views.home_view),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^admin/*', views.login_user),
     url(r'^accounts/login/?next=/Dashboard', views.login),
-    url(r'^OpArea/', views.OpAreaView, name='opArea'),
-    url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.opArea, name='op_area_detail'),
+    url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.op_area, name='op_area_detail'),
 	url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
 ]

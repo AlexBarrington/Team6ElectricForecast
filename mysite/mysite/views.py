@@ -35,50 +35,33 @@ def login_user(request):
 
 
 @login_required(login_url='/login/')
-def HomeView(request):
+def home_view(request):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/logout')
     else:
-        data_folder = MyUser.objects.get(data_folder=request.user.data_folder)
-        dataFolder = str(data_folder)
-        dataFolder = dir + dataFolder
+        dataFolder = dir + str(MyUser.objects.get(data_folder=request.user.data_folder))
         opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
         opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
+        opAreaNames.remove('dashboard')
         c = {'opAreas': opAreaNames}
         return render_to_response('index.html', c)
 
 
 @login_required(login_url='/login/')
-def OpAreaView(request, op_area_name=None):
+def op_area(request, op_area_name=None):
     if not request.user.is_authenticated():
         return redirect('http://127.0.0.1:8000/admin/logout')
     else:
-        data_folder = MyUser.objects.get(data_folder=request.user.data_folder)
-        dataFolder = str(data_folder)
-        dataFolder = dir + dataFolder
+        dataFolder = dir + str(MyUser.objects.get(data_folder=request.user.data_folder))
         opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
         opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
-        c = {'pageTitle': "OPAREA NAME", 'opAreas': opAreaNames}
-        # c.update(csrf(request))
-        return render_to_response('opAreaIndex.html', c)
-
-
-def opArea(request, op_area_name=None):
-    if not request.user.is_authenticated():
-        return redirect('http://127.0.0.1:8000/admin/logout')
-    else:
-        data_folder = MyUser.objects.get(data_folder=request.user.data_folder)
-        dataFolder = str(data_folder)
-        dataFolder = dir + dataFolder
-        opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
-        opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
+        opAreaNames.remove('dashboard')
     return render_to_response('opAreaIndex.html',
                               {'opArea': op_area_name,
                                'opAreas':opAreaNames},
                               context_instance=RequestContext(request))
 
 
-							  
 def dataView(request, op_area_name=None):
 	if not request.user.is_authenticated():
 		return redirect('http://127.0.0.1:8000/admin/logout')
@@ -93,3 +76,10 @@ def dataView(request, op_area_name=None):
 		file = open(opAreaDataPath, 'r')
 		contents = file.read()
 	return render_to_response('data.html', {'data': contents})
+
+def return_op_area_names(data_folder):
+    dataFolder = dir + data_folder
+    opAreaFiles = [f for f in listdir(dataFolder) if isfile(join(dataFolder, f))]
+    opAreaNames = [f.replace('.csv', '') for f in opAreaFiles]
+    opAreaNames.remove('dashboard')
+    return opAreaNames
