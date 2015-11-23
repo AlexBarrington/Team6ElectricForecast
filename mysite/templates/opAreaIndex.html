@@ -18,8 +18,8 @@ Released   : 20130902
 
 <!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 {% endblock %}
-		{% block content %}
-<body>
+{% block content %}
+
    <script src="/static/js/papaparse.js"></script>
    <script src="/static/js/jquery-1.11.3.js"></script>
    <script src="/static/js/dygraph.js"></script>
@@ -32,87 +32,153 @@ Released   : 20130902
 	  
 	var opArea = "{{ opArea }}"
 	var url = "http://127.0.0.1:8000/data/" + opArea + "/"
+	var dataText;
+	var dataArray;
 	
-	function doStuff(data){
-		console.log("made it to the callback")
+	var xHR = new XMLHttpRequest();
+	xHR.onload = handleStateChange;
+	xHR.open("GET", url);
+	xHR.send();
+	console.log("Request Sent");
+	
+	function handleStateChange(){
+		if( xHR.status >= 200 &&
+			xHR.status < 300) {
+		console.log("Got Response");
+		//console.log(xHR.responseText);
+		dataText = xHR.responseText;
+		console.log("data: " + dataText);
+		}
 		
-		var data = 
+		dataArray = processData(dataText);
+		//drawGraphs(dataArray);
+	}
+	
+	function processData(dataText) {
+		dataText = String(dataText);
+		var allTextLines = dataText.split(/\n/);
+		var headers = allTextLines[0].split(',');
+		var load = [];
+		var temp = [];
+		var wind = [];
+		console.log(headers);
+		for (var i=1; i<allTextLines.length; i++) {
+			var data = allTextLines[i].split(',');
+			if (data.length == headers.length) {
+
+				var loadLine = [];
+				var tempLine = [];
+				var windLine = [];
+				for (var j=0; j<headers.length; j++) {
+					if(j==0){
+						var dateString = (data[0] + " " + data[1]);
+						var date = new Date(dateString)
+						loadLine[0] = date;
+						tempLine[0] = date;
+						windLine[0] = date;
+					}
+					if(j==2){
+						loadLine[1] = (Number(data[j]));
+					}
+					if(j==3){
+						tempLine[1] = (Number(data[j]));
+					}
+					if(j==4){
+						windLine[1] = (Number(data[j]));
+					}
+					if(j==5){
+						loadLine[2] = (Number(data[j]));
+					}
+					if(j==6){
+						tempLine[2] = (Number(data[j]));
+					}
+					if(j==7){
+						windLine[2] = (Number(data[j]));
+					}
+				}
+				load.push(loadLine);
+				temp.push(tempLine);
+				wind.push(windLine);
+				console.log(load.constructor.toString().indexOf("Array") > -1);
+			}
+		}
+		 console.log(load);
+		 console.log(temp);
+		 console.log(wind);
+		 drawGraphs(load, temp, wind);
+		 //return load;
+	}
+	
+	function drawGraphs(load, temp, wind){
+		console.log("made it to the callback")
 			
 		
-		 $(document).ready(function () {
+		// $(document).ready(function () {
       new Dygraph(
           document.getElementById("load"),
-          data,
+          load,
           {
-            customBars: true,
+			labels: ["time", "actual load", "forecasted load"],
             title: 'Load for {{ opArea }}',
             ylabel: 'Load (MW)',
             legend: 'always',
-            labelsDivStyles: { 'textAlign': 'right' },
-            showRangeSelector: true
+            labelsDivStyles: { 'textAlign': 'center' },
+            showRangeSelector: true,
+			rangeSelectorHeight: 30,
+			
           }
       );
       new Dygraph(
           document.getElementById("temp"),
-          data,
+          temp,
           {
-            
-            customBars: true,
+
+			labels: ["time", "actual temperature", "forecasted temperature"],
             title: 'Temperatures for {{ opArea }}',
             ylabel: 'Temperature (F)',
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'right' },
             showRangeSelector: true,
             rangeSelectorHeight: 30,
-            rangeSelectorPlotStrokeColor: 'green',
-            rangeSelectorPlotFillColor: 'lightgreen'
           });
 		  
-		  new Dygraph(
+	new Dygraph(
           document.getElementById("windSpeed"),
-          data,
+          wind,
           {
-            
-            customBars: true,
+
+			labels: ["time", "actual wind speed", "forecasted wind speed"],
             title: 'Wind Speed for {{opArea}}',
             ylabel: 'Wind Speed (mph)',
             legend: 'always',
+			//valueRange: [-5, 25],
             labelsDivStyles: { 'textAlign': 'right' },
             showRangeSelector: true,
             rangeSelectorHeight: 30,
-            rangeSelectorPlotStrokeColor: 'yellow',
-            rangeSelectorPlotFillColor: 'lightyellow'
           });
-    }
-);
-	
-	}
-	function parseData(url, callback){
-		console.log("made it to js")
-		Papa.parse(url, {
-			download: true,
-			dynamicTyping: true,
-			complete: function(results){
-				callback(results.data);
-			}
-		});
+    //}
 	}
 	
-	parseData(url, doStuff)
+	
+	
   </script>
-</body>
-<div id="load" style="width:600px; height:300px;"></div>
-<p><br><br><br></p>
-<div id="temp" style="width:600px; height:300px;"></div>
-<p><br><br><br></p>
-<div id="windSpeed" style="width:600px; height:300px;"></div>
-		<div id="welcome">
+  <div id="welcome">
 			<div class="title">
-				<p><br><br><br><br></p>
-				<h2>{{ pageTitle }}</h2>
+				<font size="+8">{{ pageTitle }}</font>
 				<span class="byline">{{ opArea }}</span>
 			</div>
 			<p>This is <strong>{{ opArea }}</strong>, showing the contrast between forecasted and actual electrical load</p>
+			<p><br></p>
+			<div id="featured">
+				<div class="title">
+					<h2>Graphs</h2>
+				</div>
+				<div id="load" style="width:775px; height:300px;"></div>
+				<p><br><br><br></p>
+				<div id="temp" style="width:775px; height:300px;"></div>
+				<p><br><br><br></p>
+				<div id="windSpeed" style="width:775px; height:300px;"></div>
+			</div>
 			<ul class="actions">
 				<li><a href="#" class="button"></a></li>
 			</ul>
@@ -153,5 +219,5 @@ Released   : 20130902
 		{% endblock %}
 	</div>
 </div>
-</body>
+
 </html>
