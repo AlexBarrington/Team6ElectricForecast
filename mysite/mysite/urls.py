@@ -26,5 +26,5 @@ urlpatterns = [
     url(r'^admin/*', views.login_user),
     url(r'^accounts/login/?next=/Dashboard', views.login),
     url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.op_area, name='op_area_detail'),
-	url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
+    url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
 ]
