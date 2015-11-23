@@ -14,74 +14,124 @@ Released   : 20130902
 {% block statics %}
 {% load staticfiles %}
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet"/>
-<link href="{% static 'css/default.css'%}" rel="stylesheet" type="text/css" media="all"/>
-<link href="{% static 'css/fonts.css' %}" rel="stylesheet" type="text/css" media="all"/>
-<!--[if IE 6]>
-<link href="default_ie6.css" rel="stylesheet" type="text/css"/><![endif]-->
+<link href="{% static "css/default.css" %}" rel="stylesheet" type="text/css" media="all" />
+<link href="{% static "css/fonts.css" %}" rel="stylesheet" type="text/css" media="all" />
 
 {% endblock %}
 {% block content %}
+
 <div id="welcome">
     <div class="title">
         <h2>Electric Forecasts Dashboard</h2>
         <span class="byline">Navigate to the relevant op area for breakdown</span>
     </div>
-    <!--<p>This is <strong>Privy</strong>, a free, fully standards-compliant CSS template designed by <a-->
-            <!--href="http://templated.co" rel="nofollow">TEMPLATED</a>. The photos in this template are from <a-->
-            <!--href="http://fotogrph.com/"> Fotogrph</a>. This free template is released under the <a-->
-            <!--href="http://templated.co/license">Creative Commons Attribution</a> license, so you're pretty-->
-        <!--much free to do whatever you want with it (even use it commercially) provided you give us credit for-->
-        <!--it. Have fun :) </p>-->
 </div>
-
-
 
 <div id="featured">
     <div class="title">
         <h3>Today's Electric Forecast is: 50kw</h3>
-        <!--<span class="byline">Integer sit amet aliquet pretium</span>-->
-    <!--</div>-->
-    <!--<ul class="style1">-->
-        <!--<li class="first">-->
-            <!--<p class="date"><a href="#">Jan<b>05</b></a></p>-->
-
-            <!--<h3>Amet sed volutpat mauris</h3>-->
-
-            <!--<p><a href="#">Consectetuer adipiscing elit. Nam pede erat, porta eu, lobortis eget, tempus et,-->
-                <!--tellus. Etiam neque. Vivamus consequat lorem at nisl. Nullam non wisi a sem semper eleifend.-->
-                <!--Etiam non felis. Donec ut ante.</a></p>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<p class="date"><a href="#">Jan<b>03</b></a></p>-->
-
-            <!--<h3>Sagittis diam dolor amet</h3>-->
-
-            <!--<p><a href="#">Etiam non felis. Donec ut ante. In id eros. Suspendisse lacus turpis, cursus-->
-                <!--egestas at sem. Mauris quam enim, molestie. Donec leo, vivamus fermentum nibh in augue-->
-                <!--praesent congue rutrum.</a></p>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<p class="date"><a href="#">Jan<b>01</b></a></p>-->
-
-            <!--<h3>Amet sed volutpat mauris</h3>-->
-
-            <!--<p><a href="#">Consectetuer adipiscing elit. Nam pede erat, porta eu, lobortis eget, tempus et,-->
-                <!--tellus. Etiam neque. Vivamus consequat lorem at nisl. Nullam non wisi a sem semper eleifend.-->
-                <!--Etiam non felis. Donec ut ante.</a></p>-->
-        <!--</li>-->
-        <!--<li>-->
-            <!--<p class="date"><a href="#">Dec<b>31</b></a></p>-->
-
-            <!--<h3>Sagittis diam dolor amet</h3>-->
-
-            <!--<p><a href="#">Etiam non felis. Donec ut ante. In id eros. Suspendisse lacus turpis, cursus-->
-                <!--egestas at sem. Mauris quam enim, molestie. Donec leo, vivamus fermentum nibh in augue-->
-                <!--praesent congue rutrum.</a></p>-->
-        <!--</li>-->
-    <!--</ul>-->
-
 </div>
 
+   <script src="/static/js/jquery-1.11.3.js"></script>
+   <script src="/static/js/dygraph.js"></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+  <script>
+var opAreas = "{{ opAreas }}"
+
+opAreas = opAreas.replace(/&#39;/g, '');
+opAreas = opAreas.replace('[', '');
+opAreas = opAreas.replace(']', '');
+opAreas = opAreas.replace(/ /g, '');
+opAreas = opAreas.split(',');
+
+var sumLoad = [];
+for(i = 0; i<168; i++){
+	var row = [0, 0, 0];
+	sumLoad.push(row);
+	}
+console.log(sumLoad)	
+for(i=0; i<opAreas.length; i++){
+	console.log('opArea: ' + opAreas[i]);
+	
+	var url = "http://127.0.0.1:8000/data/" + opAreas[i] + "/"
+	console.log('url: ' + url);
+	var dataText;
+	var dataArray;
+	
+	var xHR = new XMLHttpRequest();
+	xHR.onload = handleStateChange;
+	xHR.open("GET", url);
+	xHR.send();
+	console.log("Request Sent");
+	
+	function handleStateChange(){
+		if( xHR.status >= 200 &&
+			xHR.status < 300) {
+		console.log("Got Response");
+		dataText = xHR.responseText;
+		console.log("data: " + dataText);
+		}
+		
+		dataArray = processData(dataText);
+	}
+}
+	
+	function processData(dataText) {
+		dataText = String(dataText);
+		var allTextLines = dataText.split(/\n/);
+		var headers = allTextLines[0].split(',');
+		
+		for (var i=1; i<allTextLines.length; i++) {
+			var data = allTextLines[i].split(',');
+			if (data.length == headers.length) {
+				
+				for (var j=0; j<headers.length; j++) {
+					if(j==0){
+						var dateString = (data[0] + " " + data[1]);
+						var date = new Date(dateString)
+						
+						sumLoad[i-1][0] = date;
+					}
+					if(j==2){
+						if(!sumLoad[i-1][1]){
+							sumLoad[i-1][1]=0;
+						}
+						sumLoad[i-1][1] = sumLoad[i-1][1] + Number(data[j]);
+					}
+
+					if(j==5){
+						if(!sumLoad[i-1][2]){
+							sumLoad[i-1][2]=0;
+						}
+						sumLoad[i-1][2] = sumLoad[i-1][2] + Number(data[j]);
+					}
+				}
+			}
+		}
+		 drawGraphs(sumLoad);
+	}
+	
+	function drawGraphs(load){
+			
+      new Dygraph(
+          document.getElementById("summedLoad"),
+          load,
+          {
+			labels: ["time", "actual load", "forecasted load"],
+            title: 'Aggregate Load',
+            ylabel: 'Load (MW)',
+            legend: 'always',
+            labelsDivStyles: { 'textAlign': 'center' },
+            showRangeSelector: true,
+			rangeSelectorHeight: 30,			
+          }
+      );
+	}
+
+</script>
+
+<div id = "summedLoad" style="width:775px; height:300px;"></div>
 
 {% endblock %}
 

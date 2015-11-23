@@ -16,17 +16,12 @@ Released   : 20130902
 <link href="{% static "css/default.css" %}" rel="stylesheet" type="text/css" media="all" />
 <link href="{% static "css/fonts.css" %}" rel="stylesheet" type="text/css" media="all" />
 
-<!--[if IE 6]><link href="default_ie6.css" rel="stylesheet" type="text/css" /><![endif]-->
 {% endblock %}
 {% block content %}
 
-   <script src="/static/js/papaparse.js"></script>
    <script src="/static/js/jquery-1.11.3.js"></script>
    <script src="/static/js/dygraph.js"></script>
 
-<!--   <div>
-	<input type = "file" id="fileInput">
-` </div> -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
   <script>
 	  
@@ -45,14 +40,11 @@ Released   : 20130902
 		if( xHR.status >= 200 &&
 			xHR.status < 300) {
 		console.log("Got Response");
-		//console.log(xHR.responseText);
 		dataText = xHR.responseText;
 		console.log("data: " + dataText);
 		}
 		
 		dataArray = processData(dataText);
-		//drawGraphs(dataArray);
-
 	}
 	
 	function processData(dataText) {
@@ -100,22 +92,19 @@ Released   : 20130902
 				load.push(loadLine);
 				temp.push(tempLine);
 				wind.push(windLine);
-				console.log(load.constructor.toString().indexOf("Array") > -1);
+//				console.log(load.constructor.toString().indexOf("Array") > -1);
 				
 			}
 		}
-		 console.log(load);
-		 console.log(temp);
-		 console.log(wind);
+//		 console.log(load);
+//		 console.log(temp);
+//		 console.log(wind);
 		 drawGraphs(load, temp, wind);
 		 updateStats(load, temp, wind);
 	}
 	
 	function drawGraphs(load, temp, wind){
-		console.log("made it to the callback")
 			
-		
-		// $(document).ready(function () {
       new Dygraph(
           document.getElementById("load"),
           load,
@@ -126,15 +115,13 @@ Released   : 20130902
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'center' },
             showRangeSelector: true,
-			rangeSelectorHeight: 30,
-			
+			rangeSelectorHeight: 30,			
           }
       );
       new Dygraph(
           document.getElementById("temp"),
           temp,
           {
-
 			labels: ["time", "actual temperature", "forecasted temperature"],
             title: 'Temperatures for {{ opArea }}',
             ylabel: 'Temperature (F)',
@@ -148,17 +135,14 @@ Released   : 20130902
           document.getElementById("windSpeed"),
           wind,
           {
-
 			labels: ["time", "actual wind speed", "forecasted wind speed"],
             title: 'Wind Speed for {{opArea}}',
             ylabel: 'Wind Speed (mph)',
             legend: 'always',
-			//valueRange: [-5, 25],
             labelsDivStyles: { 'textAlign': 'right' },
             showRangeSelector: true,
             rangeSelectorHeight: 30,
           });
-    //}
 	}
 	
 	function updateStats(load, temp, wind){
@@ -196,24 +180,23 @@ Released   : 20130902
 </script>
 <div id="welcome">
 			<div class="title">
-				<font size="+8">{{ pageTitle }}</font>
-				<span class="byline"><strong>{{ opArea }}</strong></span>
+				<h2>{{ opArea }}</h2>
+				<span class="byline"><strong>Electric Load</strong></span>
 			</div>
-			<p>This is <strong>{{ opArea }}</strong>, showing the contrast between forecasted and actual electrical load</p>
+			<p>This is <strong>{{ opArea }}</strong>, change the range by moving the slider</p>
 			<p><br></p>
-					</div>
 			<ul class="actions">
 				<ul class="actions">
 					<button class="" onclick="location.href='http://127.0.0.1:8000/data/{{opArea}}'">View Raw Data</button>
 				</ul>​
 			</ul>
-		</div>
+</div>
 				<div id="load" style="width:775px; height:300px;"></div>
 				<p><br><br><br></p>
 				<div id="temp" style="width:775px; height:300px;"></div>
 				<p><br><br><br></p>
 				<div id="windSpeed" style="width:775px; height:300px;"></div>
-<p><br><br><br></p>
+				<p><br><br><br></p>
 		<div id="featured">
 
 			<div class="title">
