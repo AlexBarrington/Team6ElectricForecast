@@ -41,7 +41,6 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'electricForcastApp',
     'coverage',
-    'django-nose',
 )
 
 # Use nose to run all tests
