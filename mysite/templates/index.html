@@ -36,6 +36,7 @@ Released   : 20130902
    <script src="/static/js/dygraph.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+  <div id="testID" style="width:775px; height:300px;"></div>
   <script>
 var opAreas = "{{ opAreas }}"
 
@@ -60,23 +61,26 @@ for(i=0; i<opAreas.length; i++){
 	var dataArray;
 	
 	var xHR = new XMLHttpRequest();
-	xHR.onload = handleStateChange;
-	xHR.open("GET", url);
+
+	xHR.open("GET", url, false);
 	xHR.send();
 	console.log("Request Sent");
 	
-	function handleStateChange(){
-		if( xHR.status >= 200 &&
-			xHR.status < 300) {
-		console.log("Got Response");
-		dataText = xHR.responseText;
-		console.log("data: " + dataText);
-		}
+
+	console.log("Got Response");
+	dataText = xHR.responseText;
+	console.log("data: " + dataText);
+
 		
-		dataArray = processData(dataText);
-	}
+	dataArray = processData(dataText);
+
 }
+
+
+console.log(sumLoad);
+drawGraphs(sumLoad);
 	
+		
 	function processData(dataText) {
 		dataText = String(dataText);
 		var allTextLines = dataText.split(/\n/);
@@ -109,13 +113,16 @@ for(i=0; i<opAreas.length; i++){
 				}
 			}
 		}
-		 drawGraphs(sumLoad);
 	}
-	
+
 	function drawGraphs(load){
-			
-      new Dygraph(
-          document.getElementById("summedLoad"),
+		
+		console.log("load: " + load);
+		x = document.getElementById("testID");
+		console.log(x);
+		
+		new Dygraph(
+          document.getElementById("testID"),
           load,
           {
 			labels: ["time", "actual load", "forecasted load"],
@@ -129,9 +136,11 @@ for(i=0; i<opAreas.length; i++){
       );
 	}
 
+	
+
 </script>
 
-<div id = "summedLoad" style="width:775px; height:300px;"></div>
+
 
 {% endblock %}
 

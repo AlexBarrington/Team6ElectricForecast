@@ -104,6 +104,8 @@ Released   : 20130902
 	}
 	
 	function drawGraphs(load, temp, wind){
+		
+		console.log(document.getElementById("load"));
 			
       new Dygraph(
           document.getElementById("load"),
@@ -201,7 +203,7 @@ Released   : 20130902
 
 			<div class="title">
 				<h2>Statistics</h2>
-				<span class="byline">A quick look at how {{ opArea }} is doing</span>
+				<span class="byline">A quick look at how {{ opArea }}'s forecasts are doing</span>
 			</div>
 			<table style="width:100%">
 				<tr>
