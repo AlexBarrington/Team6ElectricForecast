@@ -14,8 +14,12 @@ Released   : 20130902
 {% block statics %}
 {% load staticfiles %}
 <link href="http://fonts.googleapis.com/css?family=Source+Sans+Pro:200,300,400,600,700,900" rel="stylesheet"/>
-<link href="{% static "css/default.css" %}" rel="stylesheet" type="text/css" media="all" />
-<link href="{% static "css/fonts.css" %}" rel="stylesheet" type="text/css" media="all" />
+<link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css" media="all"/>
+<link href="{% static 'css/fonts.css' %}" rel="stylesheet" type="text/css" media="all"/>
+<script src="/static/js/jquery-1.11.3.js"></script>
+<script src="/static/js/dygraph.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 
 {% endblock %}
 {% block content %}
@@ -30,14 +34,11 @@ Released   : 20130902
 <div id="featured">
     <div class="title">
         <!--<h3>Today's Electric Forecast is: 50kw</h3>-->
-</div>
+    </div>
 
-   <script src="/static/js/jquery-1.11.3.js"></script>
-   <script src="/static/js/dygraph.js"></script>
 
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-  <div id="testID" style="width:775px; height:300px;"></div>
-  <script>
+    <div id="testID" style="width:775px; height:300px;"></div>
+    <script>
 var opAreas = "{{ opAreas }}"
 
 opAreas = opAreas.replace(/&#39;/g, '');
@@ -51,50 +52,32 @@ for(i = 0; i<168; i++){
 	var row = [0, 0, 0];
 	sumLoad.push(row);
 	}
-console.log(sumLoad)	
 for(i=0; i<opAreas.length; i++){
-	console.log('opArea: ' + opAreas[i]);
-	
 	var url = "http://127.0.0.1:8000/data/" + opAreas[i] + "/"
-	console.log('url: ' + url);
 	var dataText;
 	var dataArray;
-	
 	var xHR = new XMLHttpRequest();
-
 	xHR.open("GET", url, false);
 	xHR.send();
-	console.log("Request Sent");
-	
-
-	console.log("Got Response");
 	dataText = xHR.responseText;
-	console.log("data: " + dataText);
-
-		
 	dataArray = processData(dataText);
-
 }
-
-
-console.log(sumLoad);
 drawGraphs(sumLoad);
-	
-		
+
 	function processData(dataText) {
 		dataText = String(dataText);
 		var allTextLines = dataText.split(/\n/);
 		var headers = allTextLines[0].split(',');
-		
+
 		for (var i=1; i<allTextLines.length; i++) {
 			var data = allTextLines[i].split(',');
 			if (data.length == headers.length) {
-				
+
 				for (var j=0; j<headers.length; j++) {
 					if(j==0){
 						var dateString = (data[0] + " " + data[1]);
 						var date = new Date(dateString)
-						
+
 						sumLoad[i-1][0] = date;
 					}
 					if(j==2){
@@ -116,11 +99,7 @@ drawGraphs(sumLoad);
 	}
 
 	function drawGraphs(load){
-		
-		console.log("load: " + load);
 		x = document.getElementById("testID");
-		console.log(x);
-		
 		new Dygraph(
           document.getElementById("testID"),
           load,
@@ -131,24 +110,19 @@ drawGraphs(sumLoad);
             legend: 'always',
             labelsDivStyles: { 'textAlign': 'center' },
             showRangeSelector: true,
-			rangeSelectorHeight: 30,			
+			rangeSelectorHeight: 30,
           }
       );
 	}
 
-	
-
-</script>
-
+    </script>
+    {% endblock %}
 
 
-{% endblock %}
-
-
-
-<div id="copyright">
-    <span>&copy; Untitled. All rights reserved. | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</span>
-</div>
+    <div id="copyright">
+        <span>&copy; Untitled. All rights reserved. | Design by <a href="http://templated.co"
+                                                                   rel="nofollow">TEMPLATED</a>.</span>
+    </div>
 </div>
 </div>
 </div>

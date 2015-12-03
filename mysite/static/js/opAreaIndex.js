@@ -1,25 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-<!--
-Design by TEMPLATED
-http://templated.co
-Released for free under the Creative Commons Attribution License
-
-Name       : Skeleton
-Description: A two-column, fixed-width design with dark color scheme.
-Version    : 1.0
-Released   : 20130902
-
--->
-{% extends "layout.html" %}
-{% block statics %}
-{% load staticfiles %}
-<link href="{% static 'css/default.css' %}" rel="stylesheet" type="text/css" media="all" />
-<link href="{% static 'css/fonts.css' %}" rel="stylesheet" type="text/css" media="all" />
-<script src="/static/js/jquery-1.11.3.js"></script>
-<script src="/static/js/dygraph.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
-<script>
-	var opArea = "{{ opArea }}"
+var opArea = "{{ opArea }}"
 	var url = "http://127.0.0.1:8000/data/" + opArea + "/"
 	var dataText;
 	var dataArray;
@@ -161,58 +140,3 @@ Released   : 20130902
 		return answer;
 
      }
-</script>
-
-{% endblock %}
-{% block content %}
-
-<div id="welcome">
-			<div class="title">
-				<h2>{{ opArea }}</h2>
-				<span class="byline"><strong>Electric Load</strong></span>
-			</div>
-			<p>This is <strong>{{ opArea }}</strong>, change the range by moving the slider</p>
-			<p><br></p>
-			<ul class="actions">
-				<ul class="actions">
-					<button class="" onclick="window.open('http://127.0.0.1:8000/data/{{opArea}}')">View Raw Data</button>
-				</ul>​
-			</ul>
-</div>
-				<div id="load" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-				<div id="temp" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-				<div id="windSpeed" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-		<div id="featured">
-
-			<div class="title">
-				<h2>Statistics</h2>
-				<span class="byline">A quick look at how {{ opArea }}'s forecasts are doing</span>
-			</div>
-			<table style="width:100%">
-				<tr>
-				<td><b> </b></td>
-				<td><b>Load</b></td>
-				<td><b>Temperature</b></td>
-				<td><b>Wind</b></td>
-			  </tr>
-			  <tr>
-				<td><b>Mean Absolute % Error</b></td>
-				<td id="loadNumber"></td>
-				<td id="tempNumber"></td>
-			  	<td id="windNumber"></td>
-			  </tr>
-			</table>
-		</div>
-		{% endblock %}
-		{% block copyright %}
-		<div id="copyright">
-			<span>&copy; Untitled. All rights reserved. | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</span>
-		</div>
-		{% endblock %}
-	</div>
-</div>
-
-</html>
