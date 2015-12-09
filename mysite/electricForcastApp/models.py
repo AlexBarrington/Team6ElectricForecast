@@ -29,10 +29,10 @@ class MyUserManager(BaseUserManager):
         Creates and saves a superuser with the given username, email, data folder and password.
         """
         user = self.create_user(username,
-            email,
-            password=password,
-            data_folder=data_folder
-        )
+                                email,
+                                password=password,
+                                data_folder=data_folder
+                                )
         user.is_admin = True
         user.save(using=self._db)
         return user

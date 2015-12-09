@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from . import views
+from django.views.generic.edit import CreateView
+from django.contrib.auth.forms import UserCreationForm
 
 urlpatterns = [
     url(r'^$', views.login_user),
@@ -23,8 +25,10 @@ urlpatterns = [
     url(r'^Dashboard', views.HomeView),
     url(r'^Home/', views.HomeView),
     url(r'^admin/', include(admin.site.urls)),
-	url(r'^admin/*', views.login_user),
+    #url(r'^admin/*', views.login_user),
     url(r'^OpArea/', views.OpAreaView, name='opArea'),
     url(r'^OpAreaDetail/(?P<op_area_name>.*)/$', views.opArea, name='op_area_detail'),
-	url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
+    url(r'^data/(?P<op_area_name>.*)/$', views.dataView),
+    url('^register/', views.register_user),
+    url('^register_success/(?P<data_folder>.*)/$', views.register_success),
 ]

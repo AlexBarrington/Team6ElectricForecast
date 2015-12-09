@@ -139,3 +139,6 @@ TEMPLATES = [
         },
     },
 ]
+
+DEFAULT_FILE_STORAGE = 'django_dropbox.storage.DropboxStorage'
+DROPBOX_ACCESS_TOKEN = 'mYzsq8ITS1MAAAAAAAAACM2eagCzPjh8YhgiaI1kp9L5wnyo5BlhkWEw-FfqmZph'
