@@ -20,7 +20,6 @@ Released   : 20130902
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
 <script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="fmw8r2o2c0m8ipj"></script>
 <script src="/static/js/FileSaver.js"></script>
-<div id="DropboxContainer"></div>
 <script>
 	var opArea = "{{ opArea }}"
 	var url = "http://127.0.0.1:8000/data/" + opArea + "/"
@@ -167,38 +166,19 @@ Released   : 20130902
 		var answer = sum / count;
 
 		return answer;
-
      }
-
-
-	window.onload = dropboxData()
-	
-	function dropboxData(){
-		console.log("made it")
+     function dropboxData(){
 		options = {
 
 			// Required. Called when a user selects an item in the Chooser.
 			success: function(files) {
 				console.log("Here's the file link: " + files[0].link)
 				getDataAndPrint(files[0].link);
-				//window.open(files[0].link);
-			//	var dataText;
-			//	var client = new XMLHttpRequest();
-			//	client.open('GET', files[0].link);
-			//	client.onreadystatechange = function() {
-			//		dataText = client.responseText;
-			//	}
-			//	client.send();
-			//	var blob = new Blob([dataText], {type: "text/plain"});
-			//	saveAs(blob, 'C:\Users\Marielle\Documents\_COEN 2610\Team6ElectricForecast\mysite\data\britt.ahlgrimData\new.txt');
-				
 			},
 
 			// Optional. Called when the user closes the dialog without selecting a file
 			// and does not include any parameters.
-			cancel: function() {
-
-			},
+			cancel: function() {},
 
 			// Optional. "preview" (default) is a preview link to the document for sharing,
 			// "direct" is an expiring link to download the contents of the file. For more
@@ -215,12 +195,8 @@ Released   : 20130902
 			// see File types below. By default, all extensions are allowed.
 			// extensions: ['.pdf', '.doc', '.docx'],
 		};
-
-		var button = Dropbox.createChooseButton(options);
-		document.getElementById("DropboxContainer").appendChild(button);
 	}
-	
-
+	window.onload = dropboxData();
 </script>
 
 {% endblock %}
@@ -236,6 +212,10 @@ Released   : 20130902
 	<ul class="actions">
 		<ul class="actions">
 			<button class="" onclick="window.open('http://127.0.0.1:8000/data/{{opArea}}')">View Raw Data</button>
+            <button id="DropboxContainer" onclick="Dropbox.choose(options)" class="dropbox-dropin-btn dropbox-dropin-default">
+                <span class="dropin-btn-status"></span>
+                Choose Data From Dropbox
+            </button>
 		</ul>​
 	</ul>
 </div>

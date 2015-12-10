@@ -35,7 +35,9 @@ Released   : 20130902
     <div class="title">
         <!--<h3>Today's Electric Forecast is: 50kw</h3>-->
     </div>
-
+    {% if not opAreas %}
+        <h3>No OpAreas or data loaded for your company. Please contact support for more help.</h3>
+    {% endif %}
 
     <div id="testID" style="width:775px; height:500px;"></div>
     <script>
