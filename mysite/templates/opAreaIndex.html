@@ -1,4 +1,4 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <!--
 Design by TEMPLATED
 http://templated.co
@@ -18,26 +18,34 @@ Released   : 20130902
 <script src="/static/js/jquery-1.11.3.js"></script>
 <script src="/static/js/dygraph.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/1.0.2/Chart.min.js"></script>
+<script type="text/javascript" src="https://www.dropbox.com/static/api/2/dropins.js" id="dropboxjs" data-app-key="fmw8r2o2c0m8ipj"></script>
+<script src="/static/js/FileSaver.js"></script>
+<div id="DropboxContainer"></div>
 <script>
 	var opArea = "{{ opArea }}"
 	var url = "http://127.0.0.1:8000/data/" + opArea + "/"
 	var dataText;
 	var dataArray;
+	
+	getDataAndPrint(url);
+	
+	function getDataAndPrint(url){
 
-	var xHR = new XMLHttpRequest();
-	xHR.onload = handleStateChange;
-	xHR.open("GET", url);
-	xHR.send();
+		var xHR = new XMLHttpRequest();
+		xHR.onload = handleStateChange;
+		xHR.open("GET", url);
+		xHR.send();
 
-	function handleStateChange(){
-		if( xHR.status >= 200 &&
-			xHR.status < 300) {
-		dataText = xHR.responseText;
+		function handleStateChange(){
+			if( xHR.status >= 200 &&
+				xHR.status < 300) {
+			dataText = xHR.responseText;
+			}
+
+			dataArray = processData(dataText);
 		}
-
-		dataArray = processData(dataText);
 	}
-
+	
 	function processData(dataText) {
 		dataText = String(dataText);
 		var allTextLines = dataText.split(/\n/);
@@ -161,57 +169,110 @@ Released   : 20130902
 		return answer;
 
      }
+
+
+	window.onload = dropboxData()
+	
+	function dropboxData(){
+		console.log("made it")
+		options = {
+
+			// Required. Called when a user selects an item in the Chooser.
+			success: function(files) {
+				console.log("Here's the file link: " + files[0].link)
+				getDataAndPrint(files[0].link);
+				//window.open(files[0].link);
+			//	var dataText;
+			//	var client = new XMLHttpRequest();
+			//	client.open('GET', files[0].link);
+			//	client.onreadystatechange = function() {
+			//		dataText = client.responseText;
+			//	}
+			//	client.send();
+			//	var blob = new Blob([dataText], {type: "text/plain"});
+			//	saveAs(blob, 'C:\Users\Marielle\Documents\_COEN 2610\Team6ElectricForecast\mysite\data\britt.ahlgrimData\new.txt');
+				
+			},
+
+			// Optional. Called when the user closes the dialog without selecting a file
+			// and does not include any parameters.
+			cancel: function() {
+
+			},
+
+			// Optional. "preview" (default) is a preview link to the document for sharing,
+			// "direct" is an expiring link to download the contents of the file. For more
+			// information about link types, see Link types below.
+			linkType: "direct", // or "preview"
+
+			// Optional. A value of false (default) limits selection to a single file, while
+			// true enables multiple file selection.
+			multiselect: false, // or true
+
+			// Optional. This is a list of file extensions. If specified, the user will
+			// only be able to select files with these extensions. You may also specify
+			// file types, such as "video" or "images" in the list. For more information,
+			// see File types below. By default, all extensions are allowed.
+			// extensions: ['.pdf', '.doc', '.docx'],
+		};
+
+		var button = Dropbox.createChooseButton(options);
+		document.getElementById("DropboxContainer").appendChild(button);
+	}
+	
+
 </script>
 
 {% endblock %}
 {% block content %}
 
 <div id="welcome">
-			<div class="title">
-				<h2>{{ opArea }}</h2>
-				<span class="byline"><strong>Electric Load</strong></span>
-			</div>
-			<p>This is <strong>{{ opArea }}</strong>, change the range by moving the slider</p>
-			<p><br></p>
-			<ul class="actions">
-				<ul class="actions">
-					<button class="" onclick="window.open('http://127.0.0.1:8000/data/{{opArea}}')">View Raw Data</button>
-				</ul>​
-			</ul>
+	<div class="title">
+		<h2>{{ opArea }}</h2>
+		<span class="byline"><strong>Electric Load</strong></span>
+	</div>
+	<p>This is <strong>{{ opArea }}</strong>, change the range by moving the slider</p>
+	<p><br></p>
+	<ul class="actions">
+		<ul class="actions">
+			<button class="" onclick="window.open('http://127.0.0.1:8000/data/{{opArea}}')">View Raw Data</button>
+		</ul>​
+	</ul>
 </div>
-				<div id="load" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-				<div id="temp" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-				<div id="windSpeed" style="width:775px; height:300px;"></div>
-				<p><br><br><br></p>
-		<div id="featured">
+<p><br><br><br></p>
+<div id="load" style="width:775px; height:300px;"></div>
+<p><br><br><br></p>
+<div id="temp" style="width:775px; height:300px;"></div>
+<p><br><br><br></p>
+<div id="windSpeed" style="width:775px; height:300px;"></div>
+<p><br><br><br></p>
+	<div id="featured">
 
-			<div class="title">
-				<h2>Statistics</h2>
-				<span class="byline">A quick look at how {{ opArea }}'s forecasts are doing</span>
-			</div>
-			<table style="width:100%">
-				<tr>
-				<td><b> </b></td>
-				<td><b>Load</b></td>
-				<td><b>Temperature</b></td>
-				<td><b>Wind</b></td>
-			  </tr>
-			  <tr>
-				<td><b>Mean Absolute % Error</b></td>
-				<td id="loadNumber"></td>
-				<td id="tempNumber"></td>
-			  	<td id="windNumber"></td>
-			  </tr>
-			</table>
+		<div class="title">
+			<h2>Statistics</h2>
+			<span class="byline">A quick look at how {{ opArea }}'s forecasts are doing</span>
 		</div>
-		{% endblock %}
-		{% block copyright %}
-		<div id="copyright">
-			<span>&copy; Untitled. All rights reserved. | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</span>
-		</div>
-		{% endblock %}
+		<table style="width:100%">
+			<tr>
+			<td><b> </b></td>
+			<td><b>Load</b></td>
+			<td><b>Temperature</b></td>
+			<td><b>Wind</b></td>
+		  </tr>
+		  <tr>
+			<td><b>Mean Absolute % Error</b></td>
+			<td id="loadNumber"></td>
+			<td id="tempNumber"></td>
+			<td id="windNumber"></td>
+		  </tr>
+		</table>
+	</div>
+	{% endblock %}
+	{% block copyright %}
+	<div id="copyright">
+		<span>&copy; Untitled. All rights reserved. | Design by <a href="http://templated.co" rel="nofollow">TEMPLATED</a>.</span>
+	</div>
+	{% endblock %}
 	</div>
 </div>
 
